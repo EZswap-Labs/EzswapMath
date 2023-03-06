@@ -4,7 +4,7 @@
  * @Author       : 0xBalance
  * @Date         : 2022-11-30 12:42:04
  * @LastEditors  : 0xBalance
- * @LastEditTime : 2023-03-06 16:26:26
+ * @LastEditTime : 2023-03-06 16:33:40
  */
 // Equivalent number list
 function liner (n, delta) {
@@ -235,7 +235,7 @@ function getTradePoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, actio
   }
 }
 
-const mathLib = {
+export const mathLib = {
   Linear: {
     buy: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
       pfee = Number(pfee + gfee)
@@ -290,6 +290,4 @@ const mathLib = {
   }
 }
 
-// export default mathLib
-console.log(mathLib.Linear.buy(1, 0.1, 0.003, 0.003, 2, 0, 'read'))
-console.log(mathLib.Linear.sell(1, 0.1, 0.003, 0.003, 2, 0, 'create'))
+export default mathLib
