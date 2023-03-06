@@ -1,16 +1,16 @@
 /*
- * @Descripttion : EsSwap计算逻辑，前端显示永远都是显示带buy的字段,买价的时候往上取值，卖价向下取值，后端计算永远都是带sell的字段,
+ * @Descripttion : ESSWAP calculation logic, the front -end display is always a field with Buy. When the purchase price,
  * @version      : 1.0.0
  * @Author       : 0xBalance
  * @Date         : 2022-11-30 12:42:04
  * @LastEditors  : 0xBalance
- * @LastEditTime : 2023-03-06 12:56:21
+ * @LastEditTime : 2023-03-06 16:26:26
  */
-// 等差数列求和
+// Equivalent number list
 function liner (n, delta) {
   return n * (n - 1) * delta / 2
 }
-// 买池(线性)
+// Buy a pond (linear)
 function BuyPoolLiner (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const spotPrice = action === 'read' ? startprice : startprice
   const poolBuyPrice = (startprice * n - liner(n, delta)) * (1 - tfee)
@@ -32,7 +32,7 @@ function getBuyPoolLinerPrice (spotPrice, delta, tfee, pfee, n = 1, action = 're
     userSellPrice: BuyPoolLiner(spotPrice, delta, tfee, pfee, n, action).userSellPrice
   }
 }
-// 获取买池买n个后的当前价格(线性)
+// Get the current price (linear) buying pool (linear)
 function getBuyPoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = BuyPoolLiner(spotPrice, delta, tfee, pfee, n + 1, action)
   const last = BuyPoolLiner(spotPrice, delta, tfee, pfee, n, action)
@@ -40,7 +40,7 @@ function getBuyPoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action =
     userSellPrice: curren.userSellPrice - last.userSellPrice
   }
 }
-// 创建卖池(线性)
+// Create a selling pool (linear)
 function SellPoolLiner (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const spotPrice = action === 'read' ? startprice : startprice / (1 + tfee + pfee) - delta
   const newSpotPrice = spotPrice + delta
@@ -57,13 +57,13 @@ function SellPoolLiner (startprice, delta, tfee, pfee, n = 1, action = 'read') {
     poolSellPriceFee: poolSellPriceFee
   }
 }
-// 获取卖池当前价格(线性)
+// Get the current price (linear) selling pool current
 function getSellPoolLinerPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   return {
     userBuyPrice: SellPoolLiner(spotPrice, delta, tfee, pfee, n, action).userBuyPrice
   }
 }
-// 获取卖池n个后的当前价格(线性)
+// Get the current price (linear) after the na -selling pool N
 function getSellPoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = SellPoolLiner(spotPrice, delta, tfee, pfee, n + 1, action)
   const last = SellPoolLiner(spotPrice, delta, tfee, pfee, n, action)
@@ -71,7 +71,7 @@ function getSellPoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action 
     userBuyPrice: curren.userBuyPrice - last.userBuyPrice
   }
 }
-// 双边池(线性)
+// Bilateral pool (linear)
 function TradePoolLiner (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const spotPrice = action === 'read' ? startprice : startprice / (1 + tfee + pfee) - delta
   const newspotPrice = spotPrice + delta
@@ -96,7 +96,7 @@ function TradePoolLiner (startprice, delta, tfee, pfee, n = 1, action = 'read') 
     userBuyPriceFee: userBuyPriceFee
   }
 }
-// 获取双边池当前价格(线性)
+// Get the current price (linear) of the bilateral pool
 function getTradePoolLinerPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = TradePoolLiner(spotPrice, delta, tfee, pfee, n, action)
   return {
@@ -104,7 +104,7 @@ function getTradePoolLinerPrice (spotPrice, delta, tfee, pfee, n = 1, action = '
     userBuyPrice: curren.userBuyPrice
   }
 }
-// 获取双边池n个后的当前价格(线性)
+// The current price (linear) after obtaining N
 function getTradePoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = TradePoolLiner(spotPrice, delta, tfee, pfee, n + 1, action)
   const last = TradePoolLiner(spotPrice, delta, tfee, pfee, n, action)
@@ -113,7 +113,7 @@ function getTradePoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action
     userBuyPrice: curren.userBuyPrice - last.userBuyPrice
   }
 }
-// 买池(指数)
+// Buy the pool (Exponential)
 function BuyPoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const spotPrice = action === 'read' ? startprice : startprice
   const q = action === 'read' ? delta : 1 / ((100 - delta) / 100)
@@ -130,13 +130,13 @@ function BuyPoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read') {
     poolBuyPriceFee: poolBuyPriceFee
   }
 }
-// 获取买池当前价格(指数)
+// Get the current price (Exponential) of buying pool (Exponential)
 function getBuyPoolExponePrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   return {
     userSellPrice: BuyPoolExpone(spotPrice, delta, tfee, pfee, n, action).userSellPrice
   }
 }
-// 获取买池n个后的价格(指数)
+// Get the price of N after N buying the pool (Exponential)
 function getBuyPoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = BuyPoolExpone(spotPrice, delta, tfee, pfee, n + 1, action)
   const last = BuyPoolExpone(spotPrice, delta, tfee, pfee, n, action)
@@ -144,7 +144,7 @@ function getBuyPoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, action 
     userSellPrice: curren.userSellPrice - last.userSellPrice
   }
 }
-// 卖池(指数)
+// Selling pool (Exponential)
 function SellPoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const q = action === 'read' ? delta : 1 * ((100 + delta) / 100)
   const spotPrice = action === 'read' ? startprice : startprice / (1 + pfee + tfee) / q
@@ -168,7 +168,7 @@ function getSellPoolExponePrice (spotPrice, delta, tfee, pfee, n = 1, action = '
     userBuyPrice: SellPoolExpone(spotPrice, delta, tfee, pfee, n, action).userBuyPrice
   }
 }
-// 获取卖池n个后的价格(指数)
+// Get the current price (Exponential) for sale pools
 function getSellPoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = SellPoolExpone(spotPrice, delta, tfee, pfee, n + 1, action)
   const last = SellPoolExpone(spotPrice, delta, tfee, pfee, n, action)
@@ -176,7 +176,7 @@ function getSellPoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, action
     userBuyPrice: curren.userBuyPrice - last.userBuyPrice
   }
 }
-// 双边池(指数)
+// Bilateral pool (Exponential))
 function TradePoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const q = action === 'read' ? delta : 1 * ((100 + delta) / 100)
   const spotPrice = action === 'read' ? startprice : startprice / (1 + tfee + pfee) / q
@@ -217,7 +217,7 @@ function TradePoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read')
     userBuyPriceFee: userBuyPriceFee
   }
 }
-// 获取双边池当前价格(指数)
+// Get the current price (Exponential) of the bilateral pool
 function getTradePoolExponePrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = TradePoolExpone(spotPrice, delta, tfee, pfee, n, action)
   return {
@@ -225,7 +225,7 @@ function getTradePoolExponePrice (spotPrice, delta, tfee, pfee, n = 1, action = 
     userBuyPrice: curren.userBuyPrice
   }
 }
-// 获取卖双边池n个后的价格(指数)
+// Get the price (Exponential) after the N -side pool n n
 function getTradePoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, action = 'read') {
   const curren = TradePoolExpone(spotPrice, delta, tfee, pfee, n + 1, action)
   const last = TradePoolExpone(spotPrice, delta, tfee, pfee, n, action)
@@ -235,26 +235,26 @@ function getTradePoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, actio
   }
 }
 
-export const mathLib = {
+const mathLib = {
   Linear: {
-    buy: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    buy: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: BuyPoolLiner(startprice, delta, tfee, pfee, n, action),
         currentPrice: getBuyPoolLinerPrice(startprice, delta, tfee, pfee),
         nextPrice: getBuyPoolLinerNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    sell: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    sell: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: SellPoolLiner(startprice, delta, tfee, pfee, n, action),
         currentPrice: getSellPoolLinerPrice(startprice, delta, tfee, pfee),
         nextPrice: getSellPoolLinerNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    trade: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    trade: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: TradePoolLiner(startprice, delta, tfee, pfee, n, action),
         currentPrice: getTradePoolLinerPrice(startprice, delta, tfee, pfee),
@@ -263,24 +263,24 @@ export const mathLib = {
     }
   },
   Exponential: {
-    buy: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    buy: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: BuyPoolExpone(startprice, delta, tfee, pfee, n, action),
         currentPrice: getBuyPoolExponePrice(startprice, delta, tfee, pfee),
         nextPrice: getBuyPoolExponeNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    sell: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    sell: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: SellPoolExpone(startprice, delta, tfee, pfee, n, action),
         currentPrice: getSellPoolExponePrice(startprice, delta, tfee, pfee),
         nextPrice: getSellPoolExponeNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    trade: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    trade: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: TradePoolExpone(startprice, delta, tfee, pfee, n, action),
         currentPrice: getTradePoolExponePrice(startprice, delta, tfee, pfee),
@@ -289,3 +289,7 @@ export const mathLib = {
     }
   }
 }
+
+// export default mathLib
+console.log(mathLib.Linear.buy(1, 0.1, 0.003, 0.003, 2, 0, 'read'))
+console.log(mathLib.Linear.sell(1, 0.1, 0.003, 0.003, 2, 0, 'create'))
