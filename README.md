@@ -3,8 +3,8 @@
  * @version      : 1.0.0
  * @Author       : 0xBalance
  * @Date         : 2023-03-06 11:38:38
- * @LastEditors  : 0xBalance
- * @LastEditTime : 2023-03-06 16:31:15
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2023-03-19 10:59:57
 -->
 ### EZSwapMath
 此库为EzSwap计算库，计算价格使用，导出一个mathLib对象，所有得到的钱算出来都需要往下取值，所有需要付出的钱都需要往上取值，为了合约容错，一般推荐保留2-5位小数
@@ -74,7 +74,7 @@ mathLib[type][action]
 // 统一参数
 每个方法都需要以下参数
 startprice, delta, tfee, pfee, gfee, n, action
--- startprice：起始价
+-- startprice：起始价(创建池子时的开始价格，读取池子数据时的spotPrice)
 -- delta：偏移量，指单个数量nft跟下一个nft价格差值
 -- tfee：池子的交易手续费
 -- pfee：协议费
@@ -85,7 +85,7 @@ startprice, delta, tfee, pfee, gfee, n, action
 - priceData：//价格信息
    {
     delta:  偏移量，指单个数量nft跟下一个nft价格差值,
-    spotPrice: 起始价,
+    spotPrice: 起始价(读取池子用)
     poolSellPrice/poolBuyPrice:n个nft池子卖价/买价,具体看池子类型,
     userBuyPrice/userSellPrice: n个nft用户卖价/买价,具体看池子类型,
     poolSellPriceFee/poolBuyPriceFee: n个nft池子卖价手续费/买价手续费,具体看池子类型,
