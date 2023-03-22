@@ -3,8 +3,8 @@
  * @version      : 1.0.0
  * @Author       : 0xBalance
  * @Date         : 2022-11-30 12:42:04
- * @LastEditors  : 0xBalance
- * @LastEditTime : 2023-03-06 16:33:40
+ * @LastEditors  : Please set LastEditors
+ * @LastEditTime : 2023-03-22 15:29:57
  */
 // Equivalent number list
 function liner (n, delta) {
@@ -237,54 +237,54 @@ function getTradePoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, actio
 
 export const mathLib = {
   Linear: {
-    buy: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+    buy: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
       return {
         priceData: BuyPoolLiner(startprice, delta, tfee, pfee, n, action),
-        currentPrice: getBuyPoolLinerPrice(startprice, delta, tfee, pfee),
-        nextPrice: getBuyPoolLinerNextPrice(startprice, delta, tfee, pfee, n)
+        currentPrice: getBuyPoolLinerPrice(startprice, delta, tfee, pfee, n = 1, action),
+        nextPrice: getBuyPoolLinerNextPrice(startprice, delta, tfee, pfee, n, action)
       }
     },
-    sell: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+    sell: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
       return {
         priceData: SellPoolLiner(startprice, delta, tfee, pfee, n, action),
-        currentPrice: getSellPoolLinerPrice(startprice, delta, tfee, pfee),
-        nextPrice: getSellPoolLinerNextPrice(startprice, delta, tfee, pfee, n)
+        currentPrice: getSellPoolLinerPrice(startprice, delta, tfee, pfee, n = 1, action),
+        nextPrice: getSellPoolLinerNextPrice(startprice, delta, tfee, pfee, n, action)
       }
     },
-    trade: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+    trade: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
       return {
         priceData: TradePoolLiner(startprice, delta, tfee, pfee, n, action),
-        currentPrice: getTradePoolLinerPrice(startprice, delta, tfee, pfee),
-        nextPrice: getTradePoolLinerNextPrice(startprice, delta, tfee, pfee, n)
+        currentPrice: getTradePoolLinerPrice(startprice, delta, tfee, pfee, n = 1, action),
+        nextPrice: getTradePoolLinerNextPrice(startprice, delta, tfee, pfee, n, action)
       }
     }
   },
   Exponential: {
-    buy: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+    buy: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
       return {
         priceData: BuyPoolExpone(startprice, delta, tfee, pfee, n, action),
-        currentPrice: getBuyPoolExponePrice(startprice, delta, tfee, pfee),
-        nextPrice: getBuyPoolExponeNextPrice(startprice, delta, tfee, pfee, n)
+        currentPrice: getBuyPoolExponePrice(startprice, delta, tfee, pfee, n = 1, action),
+        nextPrice: getBuyPoolExponeNextPrice(startprice, delta, tfee, pfee, n, action)
       }
     },
-    sell: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+    sell: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
       return {
         priceData: SellPoolExpone(startprice, delta, tfee, pfee, n, action),
-        currentPrice: getSellPoolExponePrice(startprice, delta, tfee, pfee),
-        nextPrice: getSellPoolExponeNextPrice(startprice, delta, tfee, pfee, n)
+        currentPrice: getSellPoolExponePrice(startprice, delta, tfee, pfee, n = 1, action),
+        nextPrice: getSellPoolExponeNextPrice(startprice, delta, tfee, pfee, n, action)
       }
     },
-    trade: (startprice, delta, tfee, pfee, n, gfee = 0, action = 'read') => {
+    trade: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
       return {
         priceData: TradePoolExpone(startprice, delta, tfee, pfee, n, action),
-        currentPrice: getTradePoolExponePrice(startprice, delta, tfee, pfee),
-        nextPrice: getTradePoolExponeNextPrice(startprice, delta, tfee, pfee, n)
+        currentPrice: getTradePoolExponePrice(startprice, delta, tfee, pfee, n = 1, action),
+        nextPrice: getTradePoolExponeNextPrice(startprice, delta, tfee, pfee, n, action)
       }
     }
   }

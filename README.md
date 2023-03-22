@@ -4,31 +4,31 @@
  * @Author       : 0xBalance
  * @Date         : 2023-03-06 11:38:38
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2023-03-19 10:59:57
+ * @LastEditTime : 2023-03-22 15:29:21
 -->
 ### EZSwapMath
 此库为EzSwap计算库，计算价格使用，导出一个mathLib对象，所有得到的钱算出来都需要往下取值，所有需要付出的钱都需要往上取值，为了合约容错，一般推荐保留2-5位小数
 ```js
 export const mathLib = {
   Linear: {
-    buy: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    buy: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: BuyPoolLiner(startprice, delta, tfee, pfee, n, action),
         currentPrice: getBuyPoolLinerPrice(startprice, delta, tfee, pfee),
         nextPrice: getBuyPoolLinerNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    sell: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    sell: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: SellPoolLiner(startprice, delta, tfee, pfee, n, action),
         currentPrice: getSellPoolLinerPrice(startprice, delta, tfee, pfee),
         nextPrice: getSellPoolLinerNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    trade: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    trade: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: TradePoolLiner(startprice, delta, tfee, pfee, n, action),
         currentPrice: getTradePoolLinerPrice(startprice, delta, tfee, pfee),
@@ -37,24 +37,24 @@ export const mathLib = {
     }
   },
   Exponential: {
-    buy: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    buy: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: BuyPoolExpone(startprice, delta, tfee, pfee, n, action),
         currentPrice: getBuyPoolExponePrice(startprice, delta, tfee, pfee),
         nextPrice: getBuyPoolExponeNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    sell: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    sell: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: SellPoolExpone(startprice, delta, tfee, pfee, n, action),
         currentPrice: getSellPoolExponePrice(startprice, delta, tfee, pfee),
         nextPrice: getSellPoolExponeNextPrice(startprice, delta, tfee, pfee, n)
       }
     },
-    trade: (startprice, delta, tfee, pfee, gfee, n, action = 'read') => {
-      pfee = pfee + gfee
+    trade: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
+      pfee = Number(pfee + gfee)
       return {
         priceData: TradePoolExpone(startprice, delta, tfee, pfee, n, action),
         currentPrice: getTradePoolExponePrice(startprice, delta, tfee, pfee),
@@ -103,7 +103,7 @@ startprice, delta, tfee, pfee, gfee, n, action
 #### 例子
 ```
 //读取线性买池
-mathLib.Linear.buy(1, 0.1, 0.003, 0.003, 1, 0, 'read')
+mathLib.Linear.buy(1, 0.1, 0.003, 0.003, 0, 1, 'read')
 {
   priceData: {
     delta: 0.1,
@@ -117,7 +117,7 @@ mathLib.Linear.buy(1, 0.1, 0.003, 0.003, 1, 0, 'read')
   nextPrice: { userSellPrice: 0.8945999999999998 }  --下一个nft的价格
 }
 //创建线性卖池
-mathLib.Linear.sell(1, 0.1, 0.003, 0.003, 2, 0, 'create')
+mathLib.Linear.sell(1, 0.1, 0.003, 0.003, 0,2, 'create')
 {
   priceData: {
     delta: 0.1,
@@ -129,5 +129,33 @@ mathLib.Linear.sell(1, 0.1, 0.003, 0.003, 2, 0, 'create')
   },
   currentPrice: { userBuyPrice: 1.1065999999999998 },
   nextPrice: { userBuyPrice: 1.3078000000000003 }
+}
+//创建指数性买池
+mathLib.Exponential.buy(1, 2, 0.003, 0.003, 0, 1, 'create')
+{
+  priceData: {
+    delta: 1.0204081632653061,
+    spotPrice: 1,
+    userSellPrice: 0.994,
+    poolBuyPrice: 0.997,
+    userSellPriceFee: 0.006,
+    poolBuyPriceFee: 0.003
+  },
+  currentPrice: { userSellPrice: 0.994 },
+  nextPrice: { userSellPrice: 0.9741200000000021 }
+}
+//读取指数性买池
+mathLib.Exponential.buy(1, 1.0204081632653061, 0.003, 0.003, 0, 1, 'read')
+{
+  priceData: {
+    delta: 1.0204081632653061,
+    spotPrice: 1,
+    userSellPrice: 0.994,
+    poolBuyPrice: 0.997,
+    userSellPriceFee: 0.006,
+    poolBuyPriceFee: 0.003
+  },
+  currentPrice: { userSellPrice: 0.994 },
+  nextPrice: { userSellPrice: 0.9741200000000021 }
 }
 ```
