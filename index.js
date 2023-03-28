@@ -4,7 +4,7 @@
  * @Author       : 0xBalance
  * @Date         : 2022-11-30 12:42:04
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2023-03-22 15:29:57
+ * @LastEditTime : 2023-03-28 12:10:47
  */
 // Equivalent number list
 function liner (n, delta) {
@@ -75,22 +75,22 @@ function getSellPoolLinerNextPrice (spotPrice, delta, tfee, pfee, n = 1, action 
 function TradePoolLiner (startprice, delta, tfee, pfee, n = 1, action = 'read') {
   const spotPrice = action === 'read' ? startprice : startprice / (1 + tfee + pfee) - delta
   const newspotPrice = spotPrice + delta
-  const poolBuylPrice = (n * spotPrice - liner(n, delta)) * (1 - tfee)
+  const poolBuyPrice = (n * spotPrice - liner(n, delta)) * (1 - tfee)
   const userSellPrice = (n * spotPrice - liner(n, delta)) * (1 - pfee - tfee)
   const poolSellPrice = (n * newspotPrice + liner(n, delta)) * (1 + tfee)
   const userBuyPrice = (n * newspotPrice + liner(n, delta)) * (1 + pfee + tfee)
-  const poolBuylPriceFee = (n * spotPrice - liner(n, delta)) * tfee
+  const poolBuyPriceFee = (n * spotPrice - liner(n, delta)) * tfee
   const userSellPriceFee = (n * spotPrice - liner(n, delta)) * (tfee + pfee)
   const poolSellPriceFee = (n * newspotPrice + liner(n, delta)) * tfee
   const userBuyPriceFee = (n * newspotPrice + liner(n, delta)) * (tfee + pfee)
   return {
     delta: delta,
     spotPrice: spotPrice,
-    poolBuylPrice: poolBuylPrice,
+    poolBuyPrice: poolBuyPrice,
     userSellPrice: userSellPrice,
     poolSellPrice: poolSellPrice,
     userBuyPrice: userBuyPrice,
-    poolBuylPriceFee: poolBuylPriceFee,
+    poolBuyPriceFee: poolBuyPriceFee,
     userSellPriceFee: userSellPriceFee,
     poolSellPriceFee: poolSellPriceFee,
     userBuyPriceFee: userBuyPriceFee
@@ -181,11 +181,11 @@ function TradePoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read')
   const q = action === 'read' ? delta : 1 * ((100 + delta) / 100)
   const spotPrice = action === 'read' ? startprice : startprice / (1 + tfee + pfee) / q
   const newSpotPrice = spotPrice * q
-  let poolBuylPrice, userSellPrice, poolSellPrice, userBuyPrice, poolBuylPriceFee, userSellPriceFee, poolSellPriceFee, userBuyPriceFee
+  let poolBuyPrice, userSellPrice, poolSellPrice, userBuyPrice, poolBuyPriceFee, userSellPriceFee, poolSellPriceFee, userBuyPriceFee
   switch (q) {
     case 1:
-      poolBuylPrice = (spotPrice * n) * (1 - tfee)
-      poolBuylPriceFee = (spotPrice * n) * tfee
+      poolBuyPrice = (spotPrice * n) * (1 - tfee)
+      poolBuyPriceFee = (spotPrice * n) * tfee
       userSellPrice = (spotPrice * n) * (1 - tfee - pfee)
       userSellPriceFee = (spotPrice * n) * (tfee + pfee)
       poolSellPrice = (newSpotPrice * n) * (1 + tfee)
@@ -194,8 +194,8 @@ function TradePoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read')
       userBuyPriceFee = (newSpotPrice * n) * (tfee + pfee)
       break
     default:
-      poolBuylPrice = (spotPrice * ((1 / q) ** n - 1) / (1 / q - 1)) * (1 - tfee)
-      poolBuylPriceFee = (spotPrice * ((1 / q) ** n - 1) / (1 / q - 1)) * tfee
+      poolBuyPrice = (spotPrice * ((1 / q) ** n - 1) / (1 / q - 1)) * (1 - tfee)
+      poolBuyPriceFee = (spotPrice * ((1 / q) ** n - 1) / (1 / q - 1)) * tfee
       userSellPrice = (spotPrice * ((1 / q) ** n - 1) / (1 / q - 1)) * (1 - tfee - pfee)
       userSellPriceFee = (spotPrice * ((1 / q) ** n - 1) / (1 / q - 1)) * (tfee + pfee)
       poolSellPrice = (newSpotPrice * (q ** n - 1) / (q - 1)) * (1 + tfee)
@@ -207,11 +207,11 @@ function TradePoolExpone (startprice, delta, tfee, pfee, n = 1, action = 'read')
   return {
     delta: q,
     spotPrice: spotPrice,
-    poolBuylPrice: poolBuylPrice,
+    poolBuyPrice: poolBuyPrice,
     userSellPrice: userSellPrice,
     poolSellPrice: poolSellPrice,
     userBuyPrice: userBuyPrice,
-    poolBuylPriceFee: poolBuylPriceFee,
+    poolBuyPriceFee: poolBuyPriceFee,
     userSellPriceFee: userSellPriceFee,
     poolSellPriceFee: poolSellPriceFee,
     userBuyPriceFee: userBuyPriceFee
@@ -235,7 +235,7 @@ function getTradePoolExponeNextPrice (spotPrice, delta, tfee, pfee, n = 1, actio
   }
 }
 
-export const mathLib = {
+const mathLib = {
   Linear: {
     buy: (startprice, delta, tfee, pfee, gfee = 0, n, action = 'read') => {
       pfee = Number(pfee + gfee)
@@ -290,4 +290,5 @@ export const mathLib = {
   }
 }
 
-export default mathLib
+// export default mathLib
+console.log(mathLib.Exponential.trade(0.043310875842155919, 1.056, 0.034, 0.005, 0, 3, 'read'))
