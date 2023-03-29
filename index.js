@@ -4,7 +4,7 @@
  * @Author       : 0xBalance
  * @Date         : 2022-11-30 12:42:04
  * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2023-03-28 12:10:47
+ * @LastEditTime : 2023-03-29 12:06:20
  */
 // Equivalent number list
 function liner (n, delta) {
@@ -290,5 +290,4 @@ const mathLib = {
   }
 }
 
-// export default mathLib
-console.log(mathLib.Exponential.trade(0.043310875842155919, 1.056, 0.034, 0.005, 0, 3, 'read'))
+export default mathLib
